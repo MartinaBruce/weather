@@ -27,7 +27,9 @@ function setQuery (evt) {
      fetch (`${api.baseurl}weather?q=${query}&units=metric&APPID=${api.key}`)
      .then(res => res.json())
      .then(data => {
-    console.log(data)
+        
+        console.log(data)
+        //showWeatherData(data)
 
         /*var countryValue = data ['main']['countryEl']
         //var dateValue = data ['sys'] ['dateEl'];
@@ -41,9 +43,6 @@ function setQuery (evt) {
         timeEl.innerHTML= timeValue; 
         currentTempEl.innerHTML = tempValue;    
         timezone.innerHTML = timezoneValue; */
-
-     
-    //showWeatherData(data);
 
     }) 
 } 
@@ -73,7 +72,7 @@ getWeatherData()
 function getWeatherData () {
     navigator.geolocation.getCurrentPosition((success) => {
         
-        let {latitude, longitude } = success.coords;
+        let {latitude, longitude } = success.coords; 
 
         /* fetch api */ 
         fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${api.key}`)
@@ -93,11 +92,11 @@ function showWeatherData (data){
     timezone.innerHTML = data.timezone;
     countryEl.innerHTML = data.lat + 'N ' + data.lon+'E';
 
-
+    /**foreach loop på datat daily, en array som tar fram kommande dagar*/
     let otherDayForcast = ''
     data.daily.forEach((day, idx) => {
         if(idx == 0){
-            currentTempEl.innerHTML = `
+            currentTempEl.innerHTML = ` 
             <img src="http://openweathermap.org/img/wn//${day.weather[0].icon}@4x.png" alt="weather icon" class="w-icon">
             <div class="other">
                 <div class="day">${window.moment(day.dt*1000).format('dddd')}</div>
@@ -106,6 +105,7 @@ function showWeatherData (data){
             </div>
             
             `
+            /*kommande dagarna forecast */
         }else{
             otherDayForcast += `
            <div class="weather-forecast-item">
