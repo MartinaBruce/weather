@@ -5,6 +5,7 @@
     padding:0;
 }
 
+/* bakgrunden */
 body{
     background:url('https://source.unsplash.com/1600x900/?weather');
     background-repeat: no-repeat;
@@ -14,12 +15,13 @@ body{
     font-family: 'Poppins', sans-serif;
 }
 
+/* sökrutan lagd som header */
 header{
     display: flex; 
     justify-content: center;
     align-items: center;
     padding: 50px, 15px, 15px;
-}
+} 
     
 header {
     display: flex; 
@@ -27,8 +29,9 @@ header {
     align-items: center; 
     padding: 50px 15px 15px; 
 
-}
+} 
 
+/*design på sökrutan*/
 header input {
     width: 100%; 
     max-width: 280px;
@@ -40,16 +43,19 @@ header input {
 
 }
 
+
+/*färg på text*/
 .container{
     padding: 20px 70px;
     color:#fff;
 }
-
+/* sunrise sunset-box ?*/
 .current-info{
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    justify-content: center;
 }
+
+/* tid och datum */
 .date-container{
     font-weight: 100;
 }
@@ -62,9 +68,6 @@ header input {
     font-size: 30px;
 }
 
-.place-container{
-    text-align: end;
-}
 
 .place-container .time-zone{
     font-size: 30px;
@@ -72,16 +75,17 @@ header input {
 }
 
 .place-container .country{
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 10px;
+    font-weight: 70;
+  
 }
 
 .current-info .others{
     display: flex;
     flex-direction: column;
-    background: rgba(24,24,27, 0.6);
-    padding:20px;
-    border-radius: 10px;
+    background: rgba(0,0,0,0.2);
+    padding: 20px;
+    border-radius: 0px;
     margin: 10px 0;
     border: 1px solid #eee;
 }
@@ -93,11 +97,10 @@ header input {
 
 
 .future-forecast{
-    background: rgba(24,24,27,0.8);
+    display: flex;
     padding: 25px;
     position: fixed;
-    bottom: 0;
-    display: flex;
+    bottom: 0px;
     color:white;
     width: 100%;
     align-items: center;
@@ -112,12 +115,13 @@ header input {
     align-items: center;
     justify-content: center;
     border: 1px solid #eee;
-    border-radius: 10px;
-    padding:15px;
+    border-radius: 1px;
+    padding: 1px;
     padding-right: 40px;
-    border-radius: 10px;
-    background: rgba(0,0,0,0.2)
+    border-radius: 0px;
+    background: rgba(0,0,0,0.6)
 }
+
 
 .future-forecast .today .day{
     padding: 5px 15px;
@@ -131,6 +135,7 @@ header input {
     padding-top: 15px;
 }
 
+
 .future-forecast .weather-forecast{
     display: flex;
 }
@@ -143,12 +148,12 @@ header input {
     margin: 0 10px;
     border: 1px solid #eee;
     padding: 15px;
-    border-radius: 10px;
-    background: rgba(0,0,0,0.2)
+    border-radius: 0px;
+    background: rgba(0,0,0,0.6)
 }
 
 .weather-forecast .weather-forecast-item .day{
-    padding: 5px 15px;
+    padding: 5px 30px;
     background: #3C3C44;
     border-radius: 50px;
     text-align: center;
@@ -157,9 +162,9 @@ header input {
 .weather-forecast .weather-forecast-item .temp{
     font-weight: 100;
     font-size: 12px;
-}
+} 
 
-
+/* anpassad för olika media types/devices*/
 @media only screen and  (max-width:730px){
     
     .container{
@@ -180,9 +185,9 @@ header input {
         font-size: 50px;
     }
 
-    .date-container #am-pm{
+    .date-container #hour-minute{
         font-size: 20px;
-    }
+    } 
 
     .date-container .date{
         font-size: 20px;

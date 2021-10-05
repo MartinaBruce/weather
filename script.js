@@ -13,8 +13,6 @@ const api = {
     baseurl: "https://api.openweathermap.org/data/2.5/"
 }
 
-var inputValue = document.querySelector('.inputValue')
-
 /*eventlist on searchbox when we press a key(13= enterkey on keybord) */
 const searchbox = document.querySelector('.search-box');
 searchbox.addEventListener('keypress', setQuery); 
@@ -22,34 +20,27 @@ searchbox.addEventListener('keypress', setQuery);
 function setQuery (evt) {
     if (evt.keyCode == 13) {
         getResults(searchbox.value); 
-        console.log(searchbox.value);
+        //console.log(searchbox.value);
     }
 }
-
-function getResults (query) {
+    function getResults (query) {
      fetch (`${api.baseurl}weather?q=${query}&units=metric&APPID=${api.key}`)
      .then(res => res.json())
      .then(data => {
+    console.log(data)
 
-        /*var countryValue = data.name.countryEl;
-        var dateValue = data.dateEl;
-        var timeValue = data.timeEl;
-        var tempValue = data.main.currentTempEl;
-        var timezoneValue = data.sys.timezone;
-        /*var currentWeatherValue = data.currentWeatherItemsEl;
-        var futureWeatherValue = data.weatherForecastEl;*/
-        
-        console.log(data);
-    
+        /*var countryValue = data ['main']['countryEl']
+        //var dateValue = data ['sys'] ['dateEl'];
+        //var timeValue = data ['sys'] ['timeEl'];
+        var tempValue = data ['main'] ['currentTempEl'];
+        var timezoneValue = data ['sys']['timezone'];
 
-        /*countryEl.innerHTML = countryValue;
+     
+       /* countryEl.innerHTML = countryValue;
         dateEl.innerHTML = dateValue;
         timeEl.innerHTML= timeValue; 
-        currentTempEl.innerHTML = tempValue;
-        timezone.innerHTML = timezoneValue;
-       /* currentWeatherItemsEl.innerHTML = currentWeatherValue;
-        weatherForecastEl.innerHTML = futureWeatherValue; */
-
+        currentTempEl.innerHTML = tempValue;    
+        timezone.innerHTML = timezoneValue; */
 
      
     //showWeatherData(data);
@@ -61,7 +52,7 @@ function getResults (query) {
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
- /* dagens datum, dag och tid */
+ /* dagens datum, dag och tid (klockformat)*/
 setInterval(() => {
     const time = new Date();
     const month = time.getMonth();
@@ -84,39 +75,24 @@ function getWeatherData () {
         
         let {latitude, longitude } = success.coords;
 
-/* ta bort hourly, minutley??? */
-        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutley&units=metric&appid=${api.key}`)
+        /* fetch api */ 
+        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${api.key}`)
         .then(res => res.json())
         .then(data => {
 
         console.log(data)
         showWeatherData(data);
-        })
+        }) 
 
     }) 
 }
 
 
 function showWeatherData (data){
-    let {sunrise, sunset} = data.current;
 
     timezone.innerHTML = data.timezone;
-    countryEl.innerHTML = data.lat + 'N ' + data.lon+'E'
+    countryEl.innerHTML = data.lat + 'N ' + data.lon+'E';
 
-
-    currentWeatherItemsEl.innerHTML = 
-    `
-   <div class="weather-item">
-        <div>Sunrise</div>
-        <div>${window.moment(sunrise * 1000).format('HH:mm ')}</div>
-    </div>
-    <div class="weather-item">
-        <div>Sunset</div>
-        <div>${window.moment(sunset*1000).format('HH:mm ')}</div>
-    </div>
-    
-    
-    `;
 
     let otherDayForcast = ''
     data.daily.forEach((day, idx) => {
@@ -132,7 +108,7 @@ function showWeatherData (data){
             `
         }else{
             otherDayForcast += `
-            <div class="weather-forecast-item">
+           <div class="weather-forecast-item">
                 <div class="day">${window.moment(day.dt*1000).format('ddd')}</div>
                 <img src="http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" alt="weather icon" class="w-icon">
                 <div class="temp">Night - ${day.temp.night}&#176;C</div>
