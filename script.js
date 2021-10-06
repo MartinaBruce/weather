@@ -1,6 +1,6 @@
 const timeEl = document.getElementById('time');
 const dateEl = document.getElementById('date');
-const currentWeatherItemsEl = document.getElementById('current-weather-items');
+//const currentWeatherItemsEl = document.getElementById('current-weather-items');
 const timezone = document.getElementById('time-zone');
 const countryEl = document.getElementById('country');
 const weatherForecastEl = document.getElementById('weather-forecast');
@@ -25,27 +25,27 @@ function setQuery (evt) {
 }
     function getResults (query) {
      fetch (`${api.baseurl}weather?q=${query}&units=metric&APPID=${api.key}`)
-     .then(res => res.json())
-     .then(data => {
-        
-        console.log(data)
-        //showWeatherData(data)
+     .then(weather => {      
+        return weather.json();
+  
+    }) .then(displayResults);
 
-        /*var countryValue = data ['main']['countryEl']
-        //var dateValue = data ['sys'] ['dateEl'];
-        //var timeValue = data ['sys'] ['timeEl'];
-        var tempValue = data ['main'] ['currentTempEl'];
-        var timezoneValue = data ['sys']['timezone'];
-
-     
-       /* countryEl.innerHTML = countryValue;
-        dateEl.innerHTML = dateValue;
-        timeEl.innerHTML= timeValue; 
-        currentTempEl.innerHTML = tempValue;    
-        timezone.innerHTML = timezoneValue; */
-
-    }) 
 } 
+
+/** hämta resultat från serachbox  */
+function displayResults(weather){
+
+    let city = document.querySelector ('.place-container .time-zone');
+    city.innerText = `${weather.name}, ${weather.sys.country}`;
+
+    /*let now = new Date(); 
+    let date = doucment.querySelector('.date-container .date');
+    date.innerText = setInterval(now); */
+
+    let temp = document.querySelector('.future-forecast .current-temp');
+    temp.innerHTML = `${Math.round(weather.main.temp)}`; 
+
+}
 
 /*array månader & veckordagar*/
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -70,19 +70,19 @@ setInterval(() => {
 /*get data via navigator geolocation för exakta position */
 getWeatherData()
 function getWeatherData () {
-    navigator.geolocation.getCurrentPosition((success) => {
+navigator.geolocation.getCurrentPosition((success) => {
         
         let {latitude, longitude } = success.coords; 
 
         /* fetch api */ 
-        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${api.key}`)
+        fetch(`${api.baseurl}onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${api.key}`)
         .then(res => res.json())
         .then(data => {
 
         console.log(data)
         showWeatherData(data);
         }) 
-
+  
     }) 
 }
 
