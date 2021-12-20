@@ -1,6 +1,6 @@
 const timeEl = document.getElementById('time');
 const dateEl = document.getElementById('date');
-//const currentWeatherItemsEl = document.getElementById('current-weather-items');
+const currentWeatherItemsEl = document.getElementById('current-weather-items');
 const timezone = document.getElementById('time-zone');
 const countryEl = document.getElementById('country');
 const weatherForecastEl = document.getElementById('weather-forecast');
@@ -20,36 +20,74 @@ searchbox.addEventListener('keypress', setQuery);
 function setQuery (evt) {
     if (evt.keyCode == 13) {
         getResults(searchbox.value); 
-        //console.log(searchbox.value);
     }
 }
-    function getResults (query) {
-     fetch (`${api.baseurl}weather?q=${query}&units=metric&APPID=${api.key}`)
+
+function getResults (query) {
+     fetch (`${api.baseurl}forecast?q=${query}&units=metric&APPID=${api.key}`)
      .then(weather => {      
         return weather.json();
   
     }) .then(displayResults);
-
-} 
-
-/** hämta resultat från serachbox  */
-function displayResults(weather){
-
-    let city = document.querySelector ('.place-container .time-zone');
-    city.innerText = `${weather.name}, ${weather.sys.country}`;
-
-    /*let now = new Date(); 
-    let date = doucment.querySelector('.date-container .date');
-    date.innerText = setInterval(now); */
-
-    let temp = document.querySelector('.future-forecast .current-temp');
-    temp.innerHTML = `${Math.round(weather.main.temp)}`; 
-
+    
 }
 
+function makeForecastItem(weather){
+    
+    let forecastItem = document.createElement('div');
+    forecastItem.setAttribute('class', 'weather-forecast-item');
+
+    let forecastItemIcon = document.createElement('img');
+    forecastItemIcon.setAttribute('class', 'w-icon');
+    forecastItemIcon.setAttribute('src', `http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`);
+    forecastItem.appendChild(forecastItemIcon);
+
+
+    let forecastItemTemp = document.createElement('div');
+    forecastItemTemp.setAttribute('class', 'weather-forecast-item-temp');
+    forecastItemTemp.innerHTML = `${weather.main.temp}<span>°C</span>`;
+    forecastItem.appendChild(forecastItemTemp);
+
+
+    let forecastItemDate = document.createElement('div');
+    forecastItemDate.setAttribute("class", 'weather-forecast-date');
+    forecastItemDate.innerHTML =  weather.dt_txt.split(" ")[0]
+    forecastItem.appendChild(forecastItemDate);
+    
+    let forecastItemMin = document.createElement('div');
+    forecastItemMin.setAttribute('class', 'weather-forecast-item-Min');
+    forecastItemMin.innerHTML =  `Min: ${Math.round(weather.main.temp_min)}<span>°C</span>`;
+    forecastItem.appendChild(forecastItemMin);
+
+    let forecastItemMax = document.createElement('div');
+    forecastItemMax.setAttribute('class', 'weather-forecast-item-Max');
+    forecastItemMax.innerHTML = `Max: ${Math.round(weather.main.temp_max)}<span>°C</span>`;
+    forecastItem.appendChild(forecastItemMax);
+
+    return forecastItem
+}
+
+
+
+function displayResults(weather){
+    
+    console.log(weather);
+    let city = document.querySelector ('.place-container .time-zone');
+    city.innerText = `${weather.city.name}, ${weather.city.country}`;
+     
+    
+    weatherForecastEl.innerHTML= " "
+
+    for (i = 0; i < weather.list.length; i=i+8) {
+
+        console.log(weatherForecastEl)
+        weatherForecastEl.appendChild(makeForecastItem(weather.list[i]));
+    } 
+} 
+
 /*array månader & veckordagar*/
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+ const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
  /* dagens datum, dag och tid (klockformat)*/
 setInterval(() => {
@@ -67,58 +105,4 @@ setInterval(() => {
 
 }, 1000);
 
-/*get data via navigator geolocation för exakta position */
-getWeatherData()
-function getWeatherData () {
-navigator.geolocation.getCurrentPosition((success) => {
-        
-        let {latitude, longitude } = success.coords; 
-
-        /* fetch api */ 
-        fetch(`${api.baseurl}onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${api.key}`)
-        .then(res => res.json())
-        .then(data => {
-
-        console.log(data)
-        showWeatherData(data);
-        }) 
-  
-    }) 
-}
-
-
-function showWeatherData (data){
-
-    timezone.innerHTML = data.timezone;
-    countryEl.innerHTML = data.lat + 'N ' + data.lon+'E';
-
-    /**foreach loop på datat daily, en array som tar fram kommande dagar*/
-    let otherDayForcast = ''
-    data.daily.forEach((day, idx) => {
-        if(idx == 0){
-            currentTempEl.innerHTML = ` 
-            <img src="http://openweathermap.org/img/wn//${day.weather[0].icon}@4x.png" alt="weather icon" class="w-icon">
-            <div class="other">
-                <div class="day">${window.moment(day.dt*1000).format('dddd')}</div>
-                <div class="temp">Night - ${day.temp.night}&#176;C</div>
-                <div class="temp">Day - ${day.temp.day}&#176;C</div>
-            </div>
-            
-            `
-            /*kommande dagarna forecast */
-        }else{
-            otherDayForcast += `
-           <div class="weather-forecast-item">
-                <div class="day">${window.moment(day.dt*1000).format('ddd')}</div>
-                <img src="http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" alt="weather icon" class="w-icon">
-                <div class="temp">Night - ${day.temp.night}&#176;C</div>
-                <div class="temp">Day - ${day.temp.day}&#176;C</div>
-            </div>
-            
-            `
-        }
-    })
-
-
-    weatherForecastEl.innerHTML = otherDayForcast;
-}
+getResults("Gävle")
